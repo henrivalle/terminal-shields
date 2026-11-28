@@ -182,6 +182,7 @@ https://terminal-shields.vercel.app/pypi/v/:package
 https://terminal-shields.vercel.app/homebrew/v/:formula
 https://terminal-shields.vercel.app/pypi/:interval/:package
 https://terminal-shields.vercel.app/gem/v/:gem
+https://terminal-shields.vercel.app/gem/dt/:gem
 https://terminal-shields.vercel.app/cran/v/:pkg
 https://terminal-shields.vercel.app/docker/pulls/:user/:repo
 https://terminal-shields.vercel.app/maven-central/v/:group/:artifact
@@ -231,6 +232,8 @@ Append `?label=` to any live service badge to replace its label, for example `/g
 `github/commit-activity` counts commits in the last week / month / year (`w` / `m` / `y`) or all time (`t`), e.g. `58/month`. `?branch=` picks a branch other than the default. `github/languages/top` shows the repo's largest language and its share of bytes (`javascript: 99.8%`).
 
 `github/hacktoberfest/:year` follows the October event (UTC): before it starts it counts down (`3 days to go`), during October it shows PRs opened that month plus days left, and afterwards `is over! (N PRs)`. Open issues carrying the `?suggestion_label=` label (default `hacktoberfest`) are listed before and during the event.
+
+Example: `/gem/dt/rails`.
 
 `wakatime/*` reads coding time from WakaTime's public badges, no API key needed. Take the user id (a UUID, not your username) from the badge snippet on your WakaTime profile, and project ids from "Project Badges" at [wakatime.com/share](https://wakatime.com/share); `wakatime/github/:owner/:repo` works for repos with WakaTime "Repo Badges" enabled.
 

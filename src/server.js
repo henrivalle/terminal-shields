@@ -34,7 +34,7 @@ import { fetchNpmDownloads, fetchNpmLicense, fetchNpmVersion } from "./npm.js";
 import { fetchOpenVsxVersion } from "./openvsx.js";
 import { parseBadgePath } from "./parse.js";
 import { fetchPypiDownloads, fetchPypiVersion } from "./pypi.js";
-import { fetchRubyGemsVersion } from "./rubygems.js";
+import { fetchRubyGemsDownloads, fetchRubyGemsVersion } from "./rubygems.js";
 import { renderBadge } from "./render.js";
 import { resolveTheme } from "./themes.js";
 import { fetchWakatimeRepo, fetchWakatimeUser, fetchWakatimeUserProject } from "./wakatime.js";
@@ -358,6 +358,10 @@ app.get("/pypi/v/:pkg", async (req, res) => {
 
 app.get("/gem/v/:gem", async (req, res) => {
   await sendServiceBadge(req, res, () => fetchRubyGemsVersion(req.params.gem));
+});
+
+app.get("/gem/dt/:gem", async (req, res) => {
+  await sendServiceBadge(req, res, () => fetchRubyGemsDownloads(req.params.gem));
 });
 
 app.get("/pypi/:interval(dd|dw|dm)/:pkg", async (req, res) => {
