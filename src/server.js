@@ -31,7 +31,7 @@ import { homePageHtml } from "./homePage.js";
 import { fetchLogoPath } from "./logo.js";
 import { fetchMavenVersion } from "./maven.js";
 import { fetchNpmDownloads, fetchNpmLicense, fetchNpmVersion } from "./npm.js";
-import { fetchOpenVsxVersion } from "./openvsx.js";
+import { fetchOpenVsxDownloads, fetchOpenVsxVersion } from "./openvsx.js";
 import { parseBadgePath } from "./parse.js";
 import { fetchPypiDownloads, fetchPypiVersion } from "./pypi.js";
 import { fetchRubyGemsVersion } from "./rubygems.js";
@@ -302,6 +302,10 @@ app.get("/endpoint", async (req, res) => {
 app.get("/open-vsx/v/:namespace/:extension", async (req, res) => {
   const { namespace, extension } = req.params;
   await sendServiceBadge(req, res, () => fetchOpenVsxVersion(namespace, extension));
+});
+
+app.get("/open-vsx/dt/:namespace/:extension", async (req, res) => {
+  await sendServiceBadge(req, res, () => fetchOpenVsxDownloads(req.params.namespace, req.params.extension));
 });
 
 app.get("/website", async (req, res) => {
