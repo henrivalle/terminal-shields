@@ -180,6 +180,7 @@ https://terminal-shields.vercel.app/npm/:interval/:package
 https://terminal-shields.vercel.app/npm/l/:package
 https://terminal-shields.vercel.app/pypi/v/:package
 https://terminal-shields.vercel.app/homebrew/v/:formula
+https://terminal-shields.vercel.app/homebrew/installs/:period/:formula
 https://terminal-shields.vercel.app/pypi/:interval/:package
 https://terminal-shields.vercel.app/gem/v/:gem
 https://terminal-shields.vercel.app/cran/v/:pkg
@@ -237,6 +238,8 @@ Append `?label=` to any live service badge to replace its label, for example `/g
 `npm/dw`, `npm/dm`, `npm/dy` show weekly / monthly / yearly downloads (`475M/month`). Scoped packages work too: `/npm/dm/@babel/core`.
 
 `npm/l` reads the latest version's license. SPDX expressions (`(MIT OR Apache-2.0)`) and legacy multi-license manifests (`MIT, GPL-2.0`) are both shown; copyleft-only licenses are orange, everything else green.
+
+`homebrew/installs` supports `dm` (30 days), `dq` (90 days), and `dy` (365 days).
 
 `pypi/v` shows the latest PyPI release; `pypi/dd`, `pypi/dw`, `pypi/dm` show daily / weekly / monthly downloads from [pypistats](https://pypistats.org).
 

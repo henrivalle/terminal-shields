@@ -6,6 +6,7 @@ import { queryJson } from "./dynamic.js";
 import { fetchDockerImageSize } from "./docker.js";
 import { parseEndpointPayload } from "./endpoint.js";
 import { formatMetric } from "./format.js";
+import { fetchHomebrewInstalls } from "./homebrew.js";
 import { fetchGithubFollowers, hacktoberfestMessage, hacktoberfestPhase, isContributorListTooLarge, issueDetailState, parseDraftFilter, topLanguage } from "./github.js";
 import { fetchHomebrewVersion } from "./homebrew.js";
 import { fetchMavenVersion } from "./maven.js";
@@ -254,4 +255,22 @@ test("github followers fetcher returns the count and reports a missing user", as
   } finally {
     globalThis.fetch = realFetch;
   }
+});
+
+test("Homebrew installs select the requested window and the canonical formula", async (t) => {
+  const fetch = t.mock.method(globalThis, "fetch", async () => Response.json({
+    name: "git",
+    analytics: { install: { "30d": { git: 52_000 }, "90d": { git: 120_000 }, "365d": { git: 500_000 } } },
+  }));
+  for (const [period, count, unit] of [["dm", 52_000, "month"], ["dq", 120_000, "quarter"], ["dy", 500_000, "year"]]) {
+    assert.deepEqual(await fetchHomebrewInstalls("git-alias", period), { label: "installs", count, unit, color: "brightgreen" });
+  }
+  assert.equal(fetch.mock.calls[0].arguments[0], "https://formulae.brew.sh/api/formula/git-alias.json");
+});
+
+test("Homebrew installs rejects invalid windows and missing analytics", async (t) => {
+  const fetch = t.mock.method(globalThis, "fetch", async () => Response.json({ name: "git" }));
+  await assert.rejects(fetchHomebrewInstalls("git", "dw"), /period must be/);
+  assert.equal(fetch.mock.callCount(), 0);
+  await assert.rejects(fetchHomebrewInstalls("git", "dm"), /no install count found/);
 });

@@ -26,7 +26,7 @@ import {
   fetchGithubWorkflowStatus,
   parseDraftFilter
 } from "./github.js";
-import { fetchHomebrewVersion } from "./homebrew.js";
+import { fetchHomebrewVersion, fetchHomebrewInstalls } from "./homebrew.js";
 import { homePageHtml } from "./homePage.js";
 import { fetchLogoPath } from "./logo.js";
 import { fetchMavenVersion } from "./maven.js";
@@ -345,6 +345,10 @@ app.get("/npm/v/:pkg/:tag?", async (req, res) => {
   const pkg = req.params.pkg;
   const tag = String(req.params.tag ?? req.query.tag ?? "latest").trim() || "latest";
   await sendServiceBadge(req, res, () => fetchNpmVersion(pkg, tag));
+});
+
+app.get("/homebrew/installs/:period(dm|dq|dy)/:formula", async (req, res) => {
+  await sendServiceBadge(req, res, async () => downloadsBadge(await fetchHomebrewInstalls(req.params.formula, req.params.period)));
 });
 
 app.get("/homebrew/v/:formula", async (req, res) => {
