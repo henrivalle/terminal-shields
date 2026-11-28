@@ -1,3 +1,4 @@
+import { fetchCratesLicense } from "./crates.js";
 import express from "express";
 
 import { inferTheme, toSvgColor } from "./colors.js";
@@ -333,6 +334,10 @@ app.get("/npm/l/@:scope/:pkg", async (req, res) => {
 
 app.get("/npm/l/:pkg", async (req, res) => {
   await sendServiceBadge(req, res, () => fetchNpmLicense(req.params.pkg));
+});
+
+app.get("/crates/l/:crate", async (req, res) => {
+  await sendServiceBadge(req, res, () => fetchCratesLicense(req.params.crate));
 });
 
 app.get("/npm/v/@:scope/:pkg", async (req, res) => {
