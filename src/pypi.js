@@ -6,14 +6,18 @@ function packageName(raw) {
   return name;
 }
 
-export async function fetchPypiVersion(pkg) {
+async function fetchPypiInfo(pkg) {
   const name = packageName(pkg);
   const res = await fetch(`https://pypi.org/pypi/${encodeURIComponent(name)}/json`, { headers: HEADERS });
   if (res.status === 404) throw new Error("package not found");
   if (!res.ok) throw new Error(`PyPI ${res.status}`);
 
   const data = await res.json();
-  const version = data.info?.version;
+  return data.info ?? {};
+}
+
+export async function fetchPypiVersion(pkg) {
+  const { version } = await fetchPypiInfo(pkg);
   if (!version) throw new Error("no version found");
   return { label: "pypi", message: `v${String(version).replace(/^v/i, "")}`, color: "blue" };
 }
@@ -43,4 +47,12 @@ export async function fetchPypiDownloads(pkg, interval) {
     unit: spec.unit,
     color: count > 0 ? "brightgreen" : "lightgrey"
   };
+}
+
+export async function fetchPypiTypes(pkg) {
+  const { classifiers = [] } = await fetchPypiInfo(pkg);
+  const message = classifiers.includes("Typing :: Stubs Only")
+    ? "stubs"
+    : classifiers.includes("Typing :: Typed") ? "typed" : "untyped";
+  return { label: "types", message, color: message === "untyped" ? "lightgrey" : "blue" };
 }

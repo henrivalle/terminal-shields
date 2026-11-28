@@ -6,6 +6,7 @@ import { queryJson } from "./dynamic.js";
 import { fetchDockerImageSize } from "./docker.js";
 import { parseEndpointPayload } from "./endpoint.js";
 import { formatMetric } from "./format.js";
+import { fetchPypiTypes } from "./pypi.js";
 import { fetchGithubFollowers, hacktoberfestMessage, hacktoberfestPhase, isContributorListTooLarge, issueDetailState, parseDraftFilter, topLanguage } from "./github.js";
 import { fetchHomebrewVersion } from "./homebrew.js";
 import { fetchMavenVersion } from "./maven.js";
@@ -254,4 +255,20 @@ test("github followers fetcher returns the count and reports a missing user", as
   } finally {
     globalThis.fetch = realFetch;
   }
+});
+
+test("pypi-types uses the PyPI classifiers", async (t) => {
+  let classifiers;
+  const fetch = t.mock.method(globalThis, "fetch", async () => Response.json({ info: { classifiers } }));
+  const cases = [[["Typing :: Typed"], "typed", "blue"], [["Typing :: Stubs Only"], "stubs", "blue"], [["Programming Language :: Python :: 3"], "untyped", "lightgrey"]];
+  for (const [values, message, color] of cases) {
+    classifiers = values;
+    assert.deepEqual(await fetchPypiTypes("example"), { label: "types", message, color });
+  }
+  assert.equal(fetch.mock.calls[0].arguments[0], "https://pypi.org/pypi/example/json");
+});
+
+test("pypi-types reports an unknown PyPI package", async (t) => {
+  t.mock.method(globalThis, "fetch", async () => new Response(null, { status: 404 }));
+  await assert.rejects(fetchPypiTypes("missing"), /package not found/);
 });
