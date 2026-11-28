@@ -33,7 +33,7 @@ import { fetchMavenVersion } from "./maven.js";
 import { fetchNpmDownloads, fetchNpmLicense, fetchNpmVersion } from "./npm.js";
 import { fetchOpenVsxVersion } from "./openvsx.js";
 import { parseBadgePath } from "./parse.js";
-import { fetchPypiDownloads, fetchPypiVersion } from "./pypi.js";
+import { fetchPypiDownloads, fetchPypiVersion, fetchPypiStatus } from "./pypi.js";
 import { fetchRubyGemsVersion } from "./rubygems.js";
 import { renderBadge } from "./render.js";
 import { resolveTheme } from "./themes.js";
@@ -350,6 +350,10 @@ app.get("/npm/v/:pkg/:tag?", async (req, res) => {
 app.get("/homebrew/v/:formula", async (req, res) => {
   const { formula } = req.params;
   await sendServiceBadge(req, res, () => fetchHomebrewVersion(formula));
+});
+
+app.get("/pypi/status/:pkg", async (req, res) => {
+  await sendServiceBadge(req, res, () => fetchPypiStatus(req.params.pkg));
 });
 
 app.get("/pypi/v/:pkg", async (req, res) => {

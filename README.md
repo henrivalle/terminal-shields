@@ -179,6 +179,7 @@ https://terminal-shields.vercel.app/npm/v/:package/:tag
 https://terminal-shields.vercel.app/npm/:interval/:package
 https://terminal-shields.vercel.app/npm/l/:package
 https://terminal-shields.vercel.app/pypi/v/:package
+https://terminal-shields.vercel.app/pypi/status/:package
 https://terminal-shields.vercel.app/homebrew/v/:formula
 https://terminal-shields.vercel.app/pypi/:interval/:package
 https://terminal-shields.vercel.app/gem/v/:gem
