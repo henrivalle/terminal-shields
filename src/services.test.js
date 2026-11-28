@@ -6,6 +6,7 @@ import { queryJson } from "./dynamic.js";
 import { fetchDockerImageSize } from "./docker.js";
 import { parseEndpointPayload } from "./endpoint.js";
 import { formatMetric } from "./format.js";
+import { fetchDockerStars } from "./docker.js";
 import { fetchGithubFollowers, hacktoberfestMessage, hacktoberfestPhase, isContributorListTooLarge, issueDetailState, parseDraftFilter, topLanguage } from "./github.js";
 import { fetchHomebrewVersion } from "./homebrew.js";
 import { fetchMavenVersion } from "./maven.js";
@@ -254,4 +255,21 @@ test("github followers fetcher returns the count and reports a missing user", as
   } finally {
     globalThis.fetch = realFetch;
   }
+});
+
+test("Docker stars reads star_count and resolves official image names", async (t) => {
+  const fetch = t.mock.method(globalThis, "fetch", async () => Response.json({ star_count: 120, pull_count: 999 }));
+  assert.deepEqual(await fetchDockerStars("_", "alpine"), { label: "docker stars", message: "120", color: "blue" });
+  assert.equal(fetch.mock.calls[0].arguments[0], "https://hub.docker.com/v2/repositories/library/alpine/");
+});
+
+test("Docker stars distinguishes zero, missing counts and unknown repositories", async (t) => {
+  t.mock.method(globalThis, "fetch", async (url) => {
+    if (url.includes("/empty/")) return Response.json({ star_count: 0 });
+    if (url.includes("/not-found/")) return new Response(null, { status: 404 });
+    return Response.json({});
+  });
+  assert.equal((await fetchDockerStars("app", "empty")).message, "0");
+  await assert.rejects(fetchDockerStars("app", "missing"), /no star count found/);
+  await assert.rejects(fetchDockerStars("app", "not-found"), /repository not found/);
 });

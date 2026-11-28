@@ -2,7 +2,7 @@ import express from "express";
 
 import { inferTheme, toSvgColor } from "./colors.js";
 import { fetchCranVersion } from "./cran.js";
-import { fetchDockerImageSize, fetchDockerLastUpdated, fetchDockerPulls } from "./docker.js";
+import { fetchDockerImageSize, fetchDockerLastUpdated, fetchDockerPulls, fetchDockerStars } from "./docker.js";
 import { fetchDynamicJsonBadge } from "./dynamic.js";
 import { fetchEndpointBadge } from "./endpoint.js";
 import { formatMetric } from "./format.js";
@@ -368,6 +368,10 @@ app.get("/pypi/:interval(dd|dw|dm)/:pkg", async (req, res) => {
 app.get("/cran/v/:pkg", async (req, res) => {
   const { pkg } = req.params;
   await sendServiceBadge(req, res, () => fetchCranVersion(pkg));
+});
+
+app.get("/docker/stars/:user/:repo", async (req, res) => {
+  await sendServiceBadge(req, res, () => fetchDockerStars(req.params.user, req.params.repo));
 });
 
 app.get("/docker/pulls/:user/:repo", async (req, res) => {

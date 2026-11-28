@@ -1,4 +1,4 @@
-import { formatKbSize, formatRelativeDate } from "./format.js";
+import { formatKbSize, formatMetric, formatRelativeDate } from "./format.js";
 
 const DOCKER_HUB = "https://hub.docker.com/v2/repositories";
 const HEADERS = { Accept: "application/json", "User-Agent": "terminal-shields" };
@@ -47,4 +47,11 @@ export async function fetchDockerLastUpdated(user, repo, tag, now = new Date()) 
     message: formatRelativeDate(new Date(dateStr), now),
     color: "blue"
   };
+}
+
+export async function fetchDockerStars(user, repo) {
+  const data = await fetchDockerJson(`${DOCKER_HUB}/${repoPath(user, repo)}/`, "repository not found");
+  const count = data.star_count;
+  if (!Number.isSafeInteger(count) || count < 0) throw new Error("no star count found");
+  return { label: "docker stars", message: formatMetric(count), color: "blue" };
 }
