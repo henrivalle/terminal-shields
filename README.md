@@ -183,6 +183,7 @@ https://terminal-shields.vercel.app/homebrew/v/:formula
 https://terminal-shields.vercel.app/pypi/:interval/:package
 https://terminal-shields.vercel.app/gem/v/:gem
 https://terminal-shields.vercel.app/cran/v/:pkg
+https://terminal-shields.vercel.app/cocoapods/v/:pod
 https://terminal-shields.vercel.app/docker/pulls/:user/:repo
 https://terminal-shields.vercel.app/maven-central/v/:group/:artifact
 https://terminal-shields.vercel.app/docker/last-updated/:user/:repo/:tag?
@@ -241,6 +242,8 @@ Append `?label=` to any live service badge to replace its label, for example `/g
 `pypi/v` shows the latest PyPI release; `pypi/dd`, `pypi/dw`, `pypi/dm` show daily / weekly / monthly downloads from [pypistats](https://pypistats.org).
 
 `gem/v` shows the latest version returned by [RubyGems](https://rubygems.org/).
+
+`cocoapods/v` displays the most recent version from the CocoaPods trunk API, for example `/cocoapods/v/Alamofire`.
 
 `docker/pulls` and `docker/last-updated` read Docker Hub; use `_` as the user for official images (`/docker/pulls/_/alpine`). `last-updated` shows the newest push across all tags, or one tag's push when you append it (`/docker/last-updated/_/alpine/latest`).
 
