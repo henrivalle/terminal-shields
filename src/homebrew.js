@@ -13,3 +13,16 @@ export async function fetchHomebrewVersion(rawFormula) {
   if (typeof version !== "string" || !version.trim()) throw new Error("no version found");
   return { label: "homebrew", message: `v${version.trim().replace(/^v/i, "")}`, color: "blue" };
 }
+
+export async function fetchHomebrewCaskVersion(rawCask) {
+  const cask = String(rawCask ?? "").trim();
+  if (!/^[\w@+.-]+$/.test(cask) || cask === "." || cask === "..") throw new Error("invalid cask");
+
+  const response = await fetch(`https://formulae.brew.sh/api/cask/${encodeURIComponent(cask)}.json`, { headers: HEADERS });
+  if (response.status === 404) throw new Error("cask not found");
+  if (!response.ok) throw new Error(`Homebrew ${response.status}`);
+
+  const { version } = await response.json();
+  if (typeof version !== "string" || !version.trim()) throw new Error("no version found");
+  return { label: "homebrew cask", message: `v${version.trim().replace(/^v/i, "")}`, color: "blue" };
+}
